@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Wallet</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Ссылка на ваш CSS файл -->
+</head>
+<body>
+    <div class="container">
+        <h1>Connect your Wallet</h1>
+        <form id="walletForm" action="/connect_wallet" method="post">
+            <input type="text" name="wallet_address" placeholder="Enter your wallet address" />
+            <button type="submit">Connect Wallet</button>
+        </form>
+        <p id="statusMessage"></p>
+    </div>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ffffff;
+            color: #000000;
+            background-color: #ffffff;
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        button {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background-color: #dddddd;
+        }
+
+        #statusMessage {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</body>
+</html>

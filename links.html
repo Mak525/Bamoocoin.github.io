@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Unique Link</title>
+</head>
+<body>
+    <h1>Generate Your Unique Link</h1>
+    <button onclick="generateLink()">Generate Link</button>
+    <p id="link-output"></p>
+
+    <script>
+        function generateLink() {
+            fetch('/generate_link')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('link-output').textContent = data.link;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

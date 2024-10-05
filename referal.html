@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Code Application</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .referral-form, .referral-link {
+            margin-bottom: 20px;
+        }
+
+        .referral-form input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            color: #000000;
+        }
+
+        .referral-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .referral-form button:hover {
+            background-color: #696969;
+        }
+
+        .referral-link {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .message {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Apply Referral Code</h1>
+        <div class="referral-form">
+            <input type="text" id="referral-code" placeholder="Enter referral code">
+            <button id="submit-referral">Submit</button>
+        </div>
+        <div class="message" id="referral-message"></div>
+
+        <div class="referral-link">
+            <h2>Get Your Referral Link</h2>
+            <button id="get-referral-link">Get Referral Link</button>
+            <p id="referral-link-message"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('submit-referral').addEventListener('click', function() {
+            var referralCode = document.getElementById('referral-code').value;
+            var messageDiv = document.getElementById('referral-message');
+
+            if (referralCode) {
+                fetch('/apply_referral', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ referral_code: referralCode })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        messageDiv.textContent = 'Referral code applied! You have received 500 points.';
+                    } else {
+                        messageDiv.textContent = 'Invalid referral code or already used.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    messageDiv.textContent = 'An error occurred. Please try again.';
+                });
+            } else {
+                messageDiv.textContent = 'Please enter a referral code.';
+            }
+        });
+
+        document.getElementById('get-referral-link').addEventListener('click', function() {
+            fetch('/get_referral_link', {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('referral-link-message').textContent = `Your referral link: ${data.referral_link}`;
+                } else {
+                    document.getElementById('referral-link-message').textContent = 'Unable to get referral link.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('referral-link-message').textContent = 'An error occurred. Please try again.';
+            });
+        });
+    </script>
+</body>
+</html>

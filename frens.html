@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frens</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style.css') }}">
+</head>
+<body>
+<div id="particles-js"></div>
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <!-- Логотип или заголовок -->
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1>Frens</h1>
+        <p>Your referral ID: <span id="user-id"></span></p>
+        <button onclick="copyToClipboard()">Copy Referral ID</button>
+
+        <h2>Enter a referral ID:</h2>
+        <input type="text" id="referral-input" placeholder="Enter referral ID">
+        <button onclick="submitReferral()">Submit</button>
+
+        <div id="message"></div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-item"><a href="/" style="color: inherit; text-decoration: none;">Home</a></div>
+        <div class="footer-item"><a href="/tasks" style="color: inherit; text-decoration: none;">Tasks</a></div>
+        <div class="footer-item"><a href="/frens" style="color: inherit; text-decoration: none;">Frens</a></div>
+        <div class="footer-item">
+            <a href="/connect_wallet_page" id="wallet-link" style="color: inherit; text-decoration: none;">Wallet</a>
+        </div>
+    </div>
+</div>
+<script>
+   function generateUserId() {
+    const existingUserId = localStorage.getItem('userId');
+    if (existingUserId) {
+        return existingUserId;
+    } else {
+        const newUserId = 'user_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('userId', newUserId);
+        return newUserId;
+    }
+}
+
+// Функция для копирования реферального ID в буфер обмена
+function copyToClipboard() {
+    const userId = document.getElementById('user-id').textContent;
+    navigator.clipboard.writeText(userId).then(function() {
+        alert('Referral ID copied to clipboard');
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+    });
+}
+
+// Функция для обработки введенного реферального ID
+function submitReferral() {
+    const referralId = document.getElementById('referral-input').value;
+    const userId = localStorage.getItem('userId');
+
+    if (referralId && referralId !== userId) {
+        let referrals = JSON.parse(localStorage.getItem('referrals')) || [];
+        if (!referrals.includes(referralId)) {
+            referrals.push(referralId);
+            localStorage.setItem('referrals', JSON.stringify(referrals));
+
+            let bonusClicks = JSON.parse(localStorage.getItem('bonusClicks')) || {};
+            if (bonusClicks[referralId]) {
+                bonusClicks[referralId] += 500;
+            } else {
+                bonusClicks[referralId] = 500;
+            }
+            localStorage.setItem('bonusClicks', JSON.stringify(bonusClicks));
+
+            // Уведомление об успешной отправке
+            document.getElementById('message').textContent = 'Referral submitted successfully.';
+        } else {
+            // Уведомление, если ID уже использован
+            document.getElementById('message').textContent = 'Referral ID already used.';
+        }
+    } else {
+        // Уведомление об ошибке
+        alert('Invalid referral ID');
+    }
+}
+
+// Инициализация страницы
+document.addEventListener('DOMContentLoaded', function() {
+    const userId = generateUserId();
+    document.getElementById('user-id').textContent = userId;
+});
+</script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    particlesJS('particles-js', {
+        "particles": {
+            "number": {
+                "value": 160,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
+            },
+            "color": {
+                "value": "#ffffff"
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                },
+                "image": {
+                    "src": "img/github.svg",
+                    "width": 100,
+                    "height": 100
+                }
+            },
+            "opacity": {
+                "value": 1,
+                "random": true,
+                "anim": {
+                    "enable": true,
+                    "speed": 1,
+                    "opacity_min": 0,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": 3,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 4,
+                    "size_min": 0.3,
+                    "sync": false
+                }
+            },
+            "line_linked": {
+                "enable": false,
+                "distance": 150,
+                "color": "#ffffff",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 1,
+                "direction": "none",
+                "random": true,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+                "attract": {
+                    "enable": false,
+                    "rotateX": 600,
+                    "rotateY": 600
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "bubble"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "repulse"
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 400,
+                    "line_linked": {
+                        "opacity": 1
+                    }
+                },
+                "bubble": {
+                    "distance": 250,
+                    "size": 0,
+                    "duration": 2,
+                    "opacity": 0,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 400,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": true
+    });
+</script>
+<style>/* Общие стили для тела страницы */
+body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Стили для контейнера */
+.container {
+    text-align: center;
+}
+
+/* Стили для заголовка страницы */
+.main-content h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+/* Стили для параграфа */
+.main-content p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* Стили для ввода и кнопок */
+.main-content input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.main-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.main-content button:hover {
+    background-color: #0a74da;
+}
+
+/* Стили для сообщения */
+#message {
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+/* Стили для футера */
+.footer {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    top: 265px;
+    left: 0;
+}
+
+.footer-item {
+    flex: 1;
+    padding: 20px;
+    background-color: #1e1e1e;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 18px;
+}
+
+.footer-item a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Стили для анимации фона */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #1e1e1e;
+    z-index: -1;
+}
+</style>
+</body>
+</html>
